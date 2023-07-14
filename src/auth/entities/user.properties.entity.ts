@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import User from './user.entity';
+import { DocumentTypes } from '../../common/enums/document-types.enum';
 
 @Entity('user_properties')
 export default class UserProperties {
@@ -21,8 +22,10 @@ export default class UserProperties {
   @Column('varchar')
   document: string;
 
-  @Column('varchar')
-  documentType: string;
+  @Column('enum', {
+    enum: DocumentTypes,
+  })
+  documentType: DocumentTypes;
 
   @Column('varchar')
   cellphone: string;

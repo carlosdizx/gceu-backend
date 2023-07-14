@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import User from '../../auth/entities/user.entity';
 import { StatusEnterprise } from '../enums/status.enterprise.enum';
+import { DocumentTypes } from '../../common/enums/document-types.enum';
 
 @Entity('enterprises')
 export class Enterprise {
@@ -19,8 +20,10 @@ export class Enterprise {
   @Column('varchar')
   documentNumber: string;
 
-  @Column('varchar')
-  documentType: string;
+  @Column('enum', {
+    enum: DocumentTypes,
+  })
+  documentType: DocumentTypes;
 
   @Column('varchar')
   cellphone: string;

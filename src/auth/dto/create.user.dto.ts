@@ -7,7 +7,7 @@ import {
   MinLength,
   MaxLength,
 } from 'class-validator';
-import { DocumentTypes } from '../enums/document-types.enum';
+import { DocumentTypes } from '../../common/enums/document-types.enum';
 
 export default class CreateUserDto extends PartialType(LoginUserDto) {
   @IsString()
@@ -29,7 +29,7 @@ export default class CreateUserDto extends PartialType(LoginUserDto) {
   document: string;
 
   @IsIn(Object.values(DocumentTypes))
-  documentType: string;
+  documentType: DocumentTypes;
 
   @IsString()
   @IsNotEmpty()
