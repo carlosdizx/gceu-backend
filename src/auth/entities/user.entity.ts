@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Roles } from '../enums/role.enum';
 import UserProperties from './user.properties.entity';
+import { Enterprise } from '../../enterprise/entities/enterprise.entity';
 
 @Entity('users')
 export default class User {
@@ -32,4 +33,8 @@ export default class User {
   @OneToOne(() => UserProperties, (properties) => properties.user)
   @JoinColumn()
   properties: UserProperties;
+
+  @OneToOne(() => Enterprise, (enterprise) => enterprise.owner)
+  @JoinColumn()
+  ownerEnterprise: Enterprise;
 }
