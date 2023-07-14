@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import User from '../../auth/entities/user.entity';
+import { StatusEnterprise } from '../enums/status.enterprise.enum';
 
 @Entity('enterprises')
 export class Enterprise {
@@ -21,7 +22,16 @@ export class Enterprise {
   @Column('varchar')
   documentType: string;
 
+  @Column('varchar')
+  cellphone: string;
+
   @OneToOne(() => User, (user) => user.ownerEnterprise)
   @JoinColumn()
   owner: User;
+
+  @Column('enum', {
+    enum: StatusEnterprise,
+    default: StatusEnterprise.PENDING_ACCOUNT_CREATION,
+  })
+  status: StatusEnterprise;
 }
