@@ -20,7 +20,7 @@ export default class UserProperties {
   lastName: string;
 
   @Column('varchar')
-  document: string;
+  documentNumber: string;
 
   @Column('enum', {
     enum: DocumentTypes,

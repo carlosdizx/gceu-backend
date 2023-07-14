@@ -26,7 +26,7 @@ export default class CreateUserDto extends PartialType(LoginUserDto) {
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
-  document: string;
+  documentNumber: string;
 
   @IsIn(Object.values(DocumentTypes))
   documentType: DocumentTypes;

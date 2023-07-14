@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import AuthService from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import JwtStrategy from './strategies/jwt.strategy';
 import UserProperties from './entities/user.properties.entity';
 
+@Global()
 @Module({
   imports: [
     ConfigModule,
@@ -29,6 +30,6 @@ import UserProperties from './entities/user.properties.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy],
+  exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
 })
 export class AuthModule {}

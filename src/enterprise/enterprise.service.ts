@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
+import CreateEnterpriseDto from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Enterprise } from './entities/enterprise.entity';
+import { Repository } from 'typeorm';
+import ErrorHandlerService from '../common/utils/error.handler.service';
+const nameService = 'EnterpriseService';
 @Injectable()
 export class EnterpriseService {
-  create(createEnterpriseDto: CreateEnterpriseDto) {
+  constructor(
+    @InjectRepository(Enterprise)
+    private readonly repository: Repository<Enterprise>,
+    private readonly errorHandlerService: ErrorHandlerService,
+  ) {}
+
+  public create = async (createEnterpriseDto: CreateEnterpriseDto) => {
+    try {
+      const enterprise = this.repository.create({
+        ...createEnterpriseDto,
+      });
+
+      await this.repository.save(enterprise);
+
+      return enterprise;
+    } catch (error) {
+      this.errorHandlerService.handleException(error, nameService);
+    }
     return 'This action adds a new enterprise';
-  }
-
-  findAll() {
-    return `This action returns all enterprise`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} enterprise`;
-  }
-
-  update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
-    return `This action updates a #${id} enterprise`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} enterprise`;
-  }
+  };
 }
