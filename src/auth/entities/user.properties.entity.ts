@@ -22,7 +22,7 @@ export default class UserProperties {
   document: string;
 
   @Column('varchar')
-  typeDocument: string;
+  documentType: string;
 
   @Column('varchar')
   cellphone: string;

@@ -29,7 +29,7 @@ export default class CreateUserDto extends PartialType(LoginUserDto) {
   document: string;
 
   @IsIn(Object.values(DocumentTypes))
-  typeDocument: string;
+  documentType: string;
 
   @IsString()
   @IsNotEmpty()
