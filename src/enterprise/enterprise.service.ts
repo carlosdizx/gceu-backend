@@ -5,7 +5,6 @@ import { Enterprise } from './entities/enterprise.entity';
 import { DataSource, Repository } from 'typeorm';
 import ErrorHandlerService from '../common/utils/error.handler.service';
 import AuthService from '../auth/auth.service';
-import User from '../auth/entities/user.entity';
 import UserService from '../auth/user.service';
 const nameService = 'EnterpriseService';
 @Injectable()
@@ -23,12 +22,13 @@ export class EnterpriseService {
     const queryRunner = this.datasource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const user = await this.authService.registerUser(createEnterpriseDto.user);
-    const owner = await this.userService.findUserById(user.id);
+    const resultRegisterUser = await this.authService.registerUser(
+      createEnterpriseDto.user,
+    );
     try {
       const enterprise = this.repository.create({
         ...createEnterpriseDto,
-        owner,
+        owner: resultRegisterUser.user,
       });
 
       await queryRunner.manager.save(enterprise);

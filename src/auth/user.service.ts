@@ -36,8 +36,9 @@ export default class UserService {
         });
 
       await this.repositoryUserProperties.save(userProperties);
+      user.properties = userProperties;
 
-      await this.repository.save({ ...user, properties: userProperties });
+      await this.repository.save(user);
 
       delete user.password;
       delete userProperties.user;
@@ -51,5 +52,11 @@ export default class UserService {
     const user = await this.repository.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
     return user;
+  };
+
+  public deleteUserById = async (id: string) => {
+    const result = await this.repository.delete(id);
+    if (result.affected === 0) throw new NotFoundException('User not found');
+    return { message: `User was removed` };
   };
 }

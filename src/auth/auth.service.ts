@@ -29,7 +29,7 @@ export default class AuthService {
     try {
       delete user.password;
       return {
-        ...user,
+        user,
         token: this.generateJWT({ id: user.id }),
       };
     } catch (error) {

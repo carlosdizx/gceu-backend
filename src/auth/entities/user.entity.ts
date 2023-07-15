@@ -30,7 +30,9 @@ export default class User {
   })
   roles: Roles[];
 
-  @OneToOne(() => UserProperties, (properties) => properties.user)
+  @OneToOne(() => UserProperties, (properties) => properties.user, {
+    cascade: true,
+  })
   @JoinColumn()
   properties: UserProperties;
 
