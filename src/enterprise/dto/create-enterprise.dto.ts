@@ -4,8 +4,11 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { DocumentTypes } from '../../common/enums/document-types.enum';
+import CreateUserDto from '../../auth/dto/create.user.dto';
+import { Type } from 'class-transformer';
 
 export default class CreateEnterpriseDto {
   @IsString()
@@ -28,4 +31,8 @@ export default class CreateEnterpriseDto {
   @MinLength(7)
   @MaxLength(20)
   cellphone: string;
+
+  @ValidateNested()
+  @Type(() => CreateUserDto)
+  user: CreateUserDto;
 }

@@ -1,15 +1,27 @@
-import { PartialType } from '@nestjs/mapped-types';
-import LoginUserDto from './login.user.dto';
 import {
   IsIn,
   IsNotEmpty,
   IsString,
   MinLength,
   MaxLength,
+  IsEmail,
+  Matches,
 } from 'class-validator';
 import { DocumentTypes } from '../../common/enums/document-types.enum';
 
-export default class CreateUserDto extends PartialType(LoginUserDto) {
+export default class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(6)
+  @MaxLength(50)
+  @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message:
+      'The password must have a Uppercase, lowercase letter and a number',
+  })
+  password: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(2)

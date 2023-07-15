@@ -39,6 +39,15 @@ export default class AuthService {
           user,
         });
 
+      delete userProperties.user;
+
+      const userUpdated: User = await this.repository.create({
+        ...user,
+        properties: userProperties,
+      });
+      console.log(userUpdated, '<--------------------------------');
+      await this.repository.save(userUpdated);
+
       await this.repositoryUserProperties.save(userProperties);
 
       delete user.password;
@@ -46,7 +55,7 @@ export default class AuthService {
       return {
         ...user,
         token: this.generateJWT({ id: user.id }),
-        ...userProperties,
+        properties: userProperties,
       };
     } catch (error) {
       this.errorHandlerService.handleException(error, nameService);

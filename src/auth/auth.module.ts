@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import JwtStrategy from './strategies/jwt.strategy';
 import UserProperties from './entities/user.properties.entity';
+import UserService from './user.service';
 
 @Global()
 @Module({
@@ -29,7 +30,14 @@ import UserProperties from './entities/user.properties.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
+  providers: [AuthService, JwtStrategy, UserService],
+  exports: [
+    TypeOrmModule,
+    JwtStrategy,
+    PassportModule,
+    JwtModule,
+    AuthService,
+    UserService,
+  ],
 })
 export class AuthModule {}
