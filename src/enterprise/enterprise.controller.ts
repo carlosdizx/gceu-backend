@@ -11,6 +11,6 @@ export class EnterpriseController {
   @Post()
   @Auth(Roles.SUPERUSER)
   create(@Body() createEnterpriseDto: CreateEnterpriseDto) {
-    return this.enterpriseService.create(createEnterpriseDto);
+    return this.enterpriseService.registerEnterprise(createEnterpriseDto);
   }
 }

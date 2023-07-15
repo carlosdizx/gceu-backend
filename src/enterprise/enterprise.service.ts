@@ -6,9 +6,8 @@ import { DataSource, Repository } from 'typeorm';
 import ErrorHandlerService from '../common/utils/error.handler.service';
 import AuthService from '../auth/auth.service';
 import UserService from '../auth/user.service';
-import { Roles } from '../auth/enums/role.enum';
+import { EnterpriseCrudService } from './enterprise.crud.service';
 
-const nameService = 'EnterpriseService';
 @Injectable()
 export class EnterpriseService {
   constructor(
@@ -17,33 +16,13 @@ export class EnterpriseService {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly errorHandlerService: ErrorHandlerService,
-    private datasource: DataSource,
+    private readonly datasource: DataSource,
+    private readonly enterpriseCrudService: EnterpriseCrudService,
   ) {}
 
-  public create = async (createEnterpriseDto: CreateEnterpriseDto) => {
-    const queryRunner = this.datasource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    const { user } = await this.authService.registerUser(
-      {
-        ...createEnterpriseDto.user,
-      },
-      [Roles.ADMIN],
-    );
-    try {
-      const enterprise = this.repository.create({
-        ...createEnterpriseDto,
-        owner: user,
-      });
-      user.ownerEnterprise = await queryRunner.manager.save(enterprise);
-      await queryRunner.manager.save(user);
-
-      await queryRunner.commitTransaction();
-
-      return enterprise;
-    } catch (error) {
-      await this.userService.deleteUserById(user.id);
-      this.errorHandlerService.handleException(error, nameService);
-    }
+  public registerEnterprise = async (
+    createEnterpriseDto: CreateEnterpriseDto,
+  ) => {
+    return await this.enterpriseCrudService.create(createEnterpriseDto);
   };
 }
