@@ -19,7 +19,11 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
   public validate = async (payload: JwtPayload): Promise<User> => {
-    const user = await this.repository.findOneBy({ id: payload.id });
+    const user = await this.repository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.ownerEnterprise', 'enterprise')
+      .where('user.id = :id', { id: payload.id })
+      .getOne();
     if (!user) throw new UnauthorizedException('Token not valid');
     if (!user.isActive)
       throw new UnauthorizedException('User is inactive, talk with an admin');
