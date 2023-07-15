@@ -5,12 +5,14 @@ import LoginUserDto from './dto/login.user.dto';
 import getUser from './decorators/get-user.decorator';
 import User from './entities/user.entity';
 import Auth from './decorators/auth.decorator';
+import { Roles } from './enums/role.enum';
 
 @Controller('auth/')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('singUp')
+  @Auth(Roles.ADMIN)
   singUp(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
   }
