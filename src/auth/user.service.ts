@@ -6,6 +6,8 @@ import UserProperties from './entities/user.properties.entity';
 import CreateUserDto from './dto/create.user.dto';
 import EncryptService from '../common/utils/encrypt.service';
 import ErrorHandlerService from '../common/utils/error.handler.service';
+import { Roles } from './enums/role.enum';
+
 const nameService = 'AuthService';
 
 @Injectable()
@@ -18,13 +20,14 @@ export default class UserService {
     private readonly errorHandlerService: ErrorHandlerService,
   ) {}
 
-  public createUser = async (createUserDto: CreateUserDto) => {
+  public createUser = async (createUserDto: CreateUserDto, roles: Roles[]) => {
     try {
       const user = this.repository.create({
         ...createUserDto,
         password: await this.encryptService.encryptPassword(
           createUserDto.password,
         ),
+        roles,
       });
 
       await this.repository.save(user);

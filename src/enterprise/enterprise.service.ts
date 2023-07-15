@@ -6,6 +6,7 @@ import { DataSource, Repository } from 'typeorm';
 import ErrorHandlerService from '../common/utils/error.handler.service';
 import AuthService from '../auth/auth.service';
 import UserService from '../auth/user.service';
+import { Roles } from '../auth/enums/role.enum';
 
 const nameService = 'EnterpriseService';
 @Injectable()
@@ -24,7 +25,10 @@ export class EnterpriseService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     const { user } = await this.authService.registerUser(
-      createEnterpriseDto.user,
+      {
+        ...createEnterpriseDto.user,
+      },
+      [Roles.ADMIN],
     );
     try {
       const enterprise = this.repository.create({

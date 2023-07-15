@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import JwtPayload from './interfaces/jwt-payload.interface';
 import UserProperties from './entities/user.properties.entity';
 import UserService from './user.service';
+import { Roles } from './enums/role.enum';
 
 const nameService = 'AuthService';
 @Injectable()
@@ -24,8 +25,11 @@ export default class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  public registerUser = async (createUserDto: CreateUserDto) => {
-    const user = await this.userService.createUser(createUserDto);
+  public registerUser = async (
+    createUserDto: CreateUserDto,
+    roles: Roles[] = [Roles.CASHIER],
+  ) => {
+    const user = await this.userService.createUser(createUserDto, roles);
     try {
       delete user.password;
       return {
