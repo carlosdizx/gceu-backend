@@ -13,7 +13,7 @@ export class AuthController {
 
   @Post('singUp')
   @Auth(Roles.ADMIN)
-  singUp(@Body() createUserDto: CreateUserDto) {
+  singUp(@getUser() user: User, @Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
   }
 
