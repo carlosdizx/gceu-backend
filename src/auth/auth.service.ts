@@ -9,6 +9,7 @@ import LoginUserDto from './dto/login.user.dto';
 import { JwtService } from '@nestjs/jwt';
 import JwtPayload from './interfaces/jwt-payload.interface';
 import UserProperties from './entities/user.properties.entity';
+import UserService from './user.service';
 
 const nameService = 'AuthService';
 @Injectable()
@@ -20,42 +21,16 @@ export default class AuthService {
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly encryptService: EncryptService,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
   public registerUser = async (createUserDto: CreateUserDto) => {
+    const user = await this.userService.createUser(createUserDto);
     try {
-      const user = this.repository.create({
-        ...createUserDto,
-        password: await this.encryptService.encryptPassword(
-          createUserDto.password,
-        ),
-      });
-
-      await this.repository.save(user);
-
-      const userProperties: UserProperties =
-        this.repositoryUserProperties.create({
-          ...createUserDto,
-          user,
-        });
-
-      delete userProperties.user;
-
-      const userUpdated: User = await this.repository.create({
-        ...user,
-        properties: userProperties,
-      });
-      console.log(userUpdated, '<--------------------------------');
-      await this.repository.save(userUpdated);
-
-      await this.repositoryUserProperties.save(userProperties);
-
       delete user.password;
-      delete userProperties.user;
       return {
         ...user,
         token: this.generateJWT({ id: user.id }),
-        properties: userProperties,
       };
     } catch (error) {
       this.errorHandlerService.handleException(error, nameService);
